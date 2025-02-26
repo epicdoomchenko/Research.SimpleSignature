@@ -1,0 +1,21 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2A8806BD-F722-4E3C-94A0-81AA5F8D0CC1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignatureApp", "src\SimpleSignatureApp\SimpleSignatureApp.csproj", "{61359CA4-192F-4D17-A0FF-A8B21C2F6656}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{61359CA4-192F-4D17-A0FF-A8B21C2F6656} = {2A8806BD-F722-4E3C-94A0-81AA5F8D0CC1}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

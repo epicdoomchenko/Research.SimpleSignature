@@ -1,0 +1,50 @@
+@page "/user"
+@using System.Text.Json
+@using SimpleSignatureApp.Data
+@inject IHttpContextAccessor HttpContextAccessor
+@inject NavigationManager Navigation
+
+<h3>User Profile</h3>
+
+@if (telegramUser == null)
+{
+    <p>You are not authenticated. Please log in via Telegram.</p>
+    <a href="/telegram-auth">Login with Telegram</a>
+}
+else
+{
+    <div>
+        <p><strong>Name:</strong> @telegramUser.FirstName @telegramUser.LastName</p>
+        <p><strong>Username:</strong> @telegramUser.Username</p>
+        <p><strong>ID:</strong> @telegramUser.Id</p>
+        @if (!string.IsNullOrEmpty(telegramUser.PhotoUrl))
+        {
+            <img src="@telegramUser.PhotoUrl" alt="Profile Picture" style="width: 100px; height: 100px;" />
+        }
+    </div>
+}
+
+@code {
+    private TelegramUser telegramUser;
+
+    protected override void OnInitialized()
+    {
+        // Получаем данные пользователя из сессии
+        var session = HttpContextAccessor.HttpContext?.Session;
+        var userJson = session?.GetString("TelegramUser");
+
+        if (!string.IsNullOrEmpty(userJson))
+        {
+            telegramUser = JsonSerializer.Deserialize<TelegramUser>(userJson);
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && telegramUser == null)
+        {
+            // Если пользователь не аутентифицирован, перенаправляем его на страницу аутентификации
+            Navigation.NavigateTo("/telegram-auth", forceLoad: true);
+        }
+    }
+}
