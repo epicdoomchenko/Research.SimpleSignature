@@ -6,4 +6,11 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\SimpleSignature.Infrastructure.FileStore\SimpleSignature.Infrastructure.FileStore.csproj" />
+    <ProjectReference Include="..\Application\SimpleSignature.Application\SimpleSignature.Application.csproj" />
+    <ProjectReference Include="..\Infrastructure\SimpleSignature.Infrastructure.DAL\SimpleSignature.Infrastructure.DAL.csproj" />
+    <ProjectReference Include="..\Infrastructure\SimpleSignature.Infrastructure.Telegram\SimpleSignature.Infrastructure.Telegram.csproj" />
+  </ItemGroup>
+
 </Project>

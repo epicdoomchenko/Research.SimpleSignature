@@ -12,11 +12,9 @@ public class TelegramUser
 
     public TelegramUser()
     {
-        
     }
 
     public TelegramUser(IDictionary<string, string> data)
     {
-        
     }
 }

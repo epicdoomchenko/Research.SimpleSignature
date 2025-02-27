@@ -4,6 +4,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2A8806BD-F72
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignatureApp", "src\SimpleSignatureApp\SimpleSignatureApp.csproj", "{61359CA4-192F-4D17-A0FF-A8B21C2F6656}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "src\Infrastructure", "{4A40FD70-D100-4F33-BED8-06C76C3469A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Infrastructure.Telegram", "src\Infrastructure\SimpleSignature.Infrastructure.Telegram\SimpleSignature.Infrastructure.Telegram.csproj", "{795EAA72-307A-4A6B-A834-6AF713A72F1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "src\Application", "{31F55E82-D93D-4F5B-81C2-DC8E1F884678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Application", "src\Application\SimpleSignature.Application\SimpleSignature.Application.csproj", "{B7DDAAC3-18EF-47F1-9A95-A4AE8E1F016C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "src\Domain", "{8913E3EF-0FA4-46DB-8EA6-82E3C8ECD884}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Domain", "src\Domain\SimpleSignature.Domain\SimpleSignature.Domain.csproj", "{569360ED-B4EF-4807-AAF2-A2050EA0EB3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Infrastructure.DAL", "src\Infrastructure\SimpleSignature.Infrastructure.DAL\SimpleSignature.Infrastructure.DAL.csproj", "{42C1DE02-2955-4E02-878A-433C5A2DD69E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Application.Abstractions", "src\Application\SimpleSignature.Application.Abstractions\SimpleSignature.Application.Abstractions.csproj", "{1000BCE2-0BA1-4725-8E38-3CDD3B35800B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3CD7CA35-7045-4173-BA7B-7673EDB0721A}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Infrastructure.FileStore", "SimpleSignature.Infrastructure.FileStore\SimpleSignature.Infrastructure.FileStore.csproj", "{87C5EE60-FC4A-41E9-871D-48BE8491F10C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,11 +34,44 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{61359CA4-192F-4D17-A0FF-A8B21C2F6656} = {2A8806BD-F722-4E3C-94A0-81AA5F8D0CC1}
+		{4A40FD70-D100-4F33-BED8-06C76C3469A8} = {2A8806BD-F722-4E3C-94A0-81AA5F8D0CC1}
+		{795EAA72-307A-4A6B-A834-6AF713A72F1A} = {4A40FD70-D100-4F33-BED8-06C76C3469A8}
+		{31F55E82-D93D-4F5B-81C2-DC8E1F884678} = {2A8806BD-F722-4E3C-94A0-81AA5F8D0CC1}
+		{B7DDAAC3-18EF-47F1-9A95-A4AE8E1F016C} = {31F55E82-D93D-4F5B-81C2-DC8E1F884678}
+		{8913E3EF-0FA4-46DB-8EA6-82E3C8ECD884} = {2A8806BD-F722-4E3C-94A0-81AA5F8D0CC1}
+		{569360ED-B4EF-4807-AAF2-A2050EA0EB3E} = {8913E3EF-0FA4-46DB-8EA6-82E3C8ECD884}
+		{42C1DE02-2955-4E02-878A-433C5A2DD69E} = {4A40FD70-D100-4F33-BED8-06C76C3469A8}
+		{1000BCE2-0BA1-4725-8E38-3CDD3B35800B} = {31F55E82-D93D-4F5B-81C2-DC8E1F884678}
+		{87C5EE60-FC4A-41E9-871D-48BE8491F10C} = {4A40FD70-D100-4F33-BED8-06C76C3469A8}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61359CA4-192F-4D17-A0FF-A8B21C2F6656}.Release|Any CPU.Build.0 = Release|Any CPU
+		{795EAA72-307A-4A6B-A834-6AF713A72F1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{795EAA72-307A-4A6B-A834-6AF713A72F1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{795EAA72-307A-4A6B-A834-6AF713A72F1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{795EAA72-307A-4A6B-A834-6AF713A72F1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7DDAAC3-18EF-47F1-9A95-A4AE8E1F016C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7DDAAC3-18EF-47F1-9A95-A4AE8E1F016C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7DDAAC3-18EF-47F1-9A95-A4AE8E1F016C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7DDAAC3-18EF-47F1-9A95-A4AE8E1F016C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{569360ED-B4EF-4807-AAF2-A2050EA0EB3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{569360ED-B4EF-4807-AAF2-A2050EA0EB3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{569360ED-B4EF-4807-AAF2-A2050EA0EB3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{569360ED-B4EF-4807-AAF2-A2050EA0EB3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42C1DE02-2955-4E02-878A-433C5A2DD69E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42C1DE02-2955-4E02-878A-433C5A2DD69E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42C1DE02-2955-4E02-878A-433C5A2DD69E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42C1DE02-2955-4E02-878A-433C5A2DD69E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1000BCE2-0BA1-4725-8E38-3CDD3B35800B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1000BCE2-0BA1-4725-8E38-3CDD3B35800B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1000BCE2-0BA1-4725-8E38-3CDD3B35800B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1000BCE2-0BA1-4725-8E38-3CDD3B35800B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87C5EE60-FC4A-41E9-871D-48BE8491F10C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87C5EE60-FC4A-41E9-871D-48BE8491F10C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87C5EE60-FC4A-41E9-871D-48BE8491F10C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87C5EE60-FC4A-41E9-871D-48BE8491F10C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
