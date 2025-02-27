@@ -1,0 +1,63 @@
+@page "/document-data"
+@using MediatR
+@using SimpleSignature.Application.Abstractions.Dto
+@using SimpleSignature.Application.Queries
+@using SimpleSignature.Domain.Enums
+@inject IMediator Mediator
+
+<h3>Document Data</h3>
+
+<input type="number" @bind="documentId" placeholder="Enter Document ID" />
+<button @onclick="GetDocumentData">Get Document Data</button>
+
+@if (documents != null && documents.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Filename</th>
+                <th>Created</th>
+                <th>Signed</th>
+                <th>Signing Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var document in documents)
+            {
+                <tr class="@GetRowClass(document.SigningStatus)">
+                    <td>@document.Id</td>
+                    <td>@document.Filename</td>
+                    <td>@document.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@document.Signed.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@document.SigningStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (documents != null && !documents.Any())
+{
+    <p>No documents found.</p>
+}
+
+@code {
+    private int documentId;
+    private IEnumerable<DocumentData> documents;
+
+    private async Task GetDocumentData()
+    {
+        // Здесь вызов метода для получения данных из БД
+        documents =  await Mediator.Send(new GetUserDocuments(documentId));
+    }
+    
+    private string GetRowClass(SigningStatus status)
+    {
+        return status switch
+        {
+            SigningStatus.Access => "status-access",
+            SigningStatus.Deny => "status-deny",
+            _ => "status-none" // По умолчанию для None и других значений
+        };
+    }
+}

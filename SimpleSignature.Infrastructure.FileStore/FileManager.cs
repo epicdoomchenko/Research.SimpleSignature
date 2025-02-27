@@ -1,4 +1,4 @@
-﻿using SimpleSignature.Application.Abstractions;
+﻿using SimpleSignature.Application.Abstractions.Services;
 
 namespace SimpleSignature.Infrastructure.FileStore;
 
@@ -15,7 +15,7 @@ internal class FileManager : IFileManager
         }
     }
 
-    public async Task<Uri> SaveDocumentAsync(string fileName, byte[] document,
+    public async Task<Uri> SaveDocumentAsync(string fileName, Stream document,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(fileName))
@@ -29,7 +29,11 @@ internal class FileManager : IFileManager
         }
 
         var filePath = Path.Combine(DocumentStorePath, fileName);
-        await File.WriteAllBytesAsync(filePath, document, cancellationToken);
+
+        using (Stream fileWriter = new FileStream(filePath, FileMode.OpenOrCreate))
+        {
+            await document.CopyToAsync(fileWriter, cancellationToken);
+        }
         return new Uri(filePath);
     }
 

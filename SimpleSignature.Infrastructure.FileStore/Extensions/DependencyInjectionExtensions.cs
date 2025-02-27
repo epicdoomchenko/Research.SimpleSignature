@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
-using SimpleSignature.Application.Abstractions;
+using SimpleSignature.Application.Abstractions.Services;
 
 namespace SimpleSignature.Infrastructure.FileStore.Extensions;
 

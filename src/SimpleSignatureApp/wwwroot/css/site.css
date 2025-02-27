@@ -62,3 +62,16 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+
+/* Стили для статусов */
+.status-none {
+    background-color: white; /* Белый цвет для None */
+}
+
+.status-access {
+    background-color: #e8f5e9; /* Светло-салатовый для Access */
+}
+
+.status-deny {
+    background-color: #ffebee; /* Светло-красный для Deny */
+}

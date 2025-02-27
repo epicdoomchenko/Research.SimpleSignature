@@ -26,7 +26,10 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true; // Необходимо для работы сессий
 });
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute());
+});
 builder.Services.AddServerSideBlazor();
 
 builder.Services
@@ -34,6 +37,15 @@ builder.Services
     .AddDal()
     .AddFileStore()
     .AddTelegramServices(builder.Configuration);
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.Cookie.Expiration = TimeSpan.Zero;
+    options.SuppressXFrameOptionsHeader = true;
+});
+
+builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen(x => { x.EnableAnnotations(); });
 
 var app = builder.Build();
 
@@ -43,20 +55,22 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+    app.MapOpenApi();
 }
 
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
-
 app.UseRouting();
+
+app.UseAntiforgery();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-app.MapRazorPages();
-
 app.UseSession();
+
+app.MapRazorPages();
 
 using (var scope = app.Services.CreateScope())
 {
@@ -88,20 +102,47 @@ app.MapGet("/api/auth/telegram", async (HttpContext context, IMediator mediator,
     return Results.Redirect("/user");
 });
 
-app.MapGet("/bot/setWebhook",
-    async ([FromServices] TelegramBotClient bot, [FromServices] IOptions<TelegramOptions> telegramSettings) =>
+app.MapPost("/api/document",
+        async ([FromForm] IFormFile file, IMediator mediator, CancellationToken cancellationToken) =>
+        {
+            var newDocId = await mediator.Send(new CreateDocument(file.FileName, file.OpenReadStream()),
+                cancellationToken);
+            return Results.Ok(new { Id = newDocId });
+        })
+    .WithOpenApi()
+    .DisableAntiforgery();
+
+app.MapPost("/api/user/{id:long}/{documentId:guid}", async (
+        [FromRoute] long id,
+        [FromRoute] Guid documentId,
+        [FromServices] IMediator mediator,
+        CancellationToken cancellationToken) =>
     {
-        var webhookUrl = telegramSettings.Value.WebhookUrl;
-        await bot.SetWebhook(webhookUrl.AbsoluteUri);
-        return $"Webhook set to {webhookUrl}";
-    });
-app.MapPost("/bot", OnUpdate);
-app.MapPost("/", OnUpdate);
+        await mediator.Send(new CreateSigningDocument(documentId, id), cancellationToken);
+    })
+    .WithOpenApi();
+
+app.MapGet("/bot/setWebhook",
+        async ([FromServices] TelegramBotClient bot, [FromServices] IOptions<TelegramOptions> telegramSettings) =>
+        {
+            var webhookUrl = telegramSettings.Value.WebhookUrl;
+            await bot.SetWebhook(webhookUrl.AbsoluteUri);
+            return $"Webhook set to {webhookUrl}";
+        })
+    .WithOpenApi();
+app.MapPost("/bot", async (
+    [FromBody] Update update,
+    [FromServices] TelegramMessageHandler telegramMessageHandler,
+    CancellationToken cancellationToken) =>
+{
+    await telegramMessageHandler.HandleUpdateAsync(update, cancellationToken);
+});
+app.MapPost("/", async (
+    [FromBody] Update update,
+    [FromServices] TelegramMessageHandler telegramMessageHandler,
+    CancellationToken cancellationToken) =>
+{
+    await telegramMessageHandler.HandleUpdateAsync(update, cancellationToken);
+});
 
 app.Run();
-
-
-async void OnUpdate(TelegramBotClient bot, Update update, [FromServices] UpdateHandler updateHandler, CancellationToken cancellationToken)
-{
-    await updateHandler.HandleUpdateAsync(bot, update, cancellationToken);
-}

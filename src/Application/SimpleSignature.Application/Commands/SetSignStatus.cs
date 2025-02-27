@@ -15,7 +15,7 @@ internal sealed class SetSignStatusHandler(IUserRepository userRepository) : IRe
 {
     public async Task Handle(SetSignStatus request, CancellationToken cancellationToken)
     {
-        var user = await userRepository.GetByIdAsync(request.UserId, cancellationToken);
+        var user = await userRepository.GetByIdWithSignedDocumentsAsync(request.UserId, cancellationToken);
 
         if (user == null)
         {

@@ -1,14 +1,14 @@
 using MediatR;
-using SimpleSignature.Application.Abstractions;
 using SimpleSignature.Application.Abstractions.Repositories;
+using SimpleSignature.Application.Abstractions.Services;
 using SimpleSignature.Domain.Entities;
 
 namespace SimpleSignature.Application.Commands;
 
-public class CreateDocument(string fileName, byte[] content) : IRequest<Guid>
+public class CreateDocument(string fileName, Stream content) : IRequest<Guid>
 {
     public string FileName { get; } = fileName;
-    public byte[] Content { get; } = content;
+    public Stream Content { get; } = content;
 }
 
 internal sealed class CreateDocumentHandler(IFileManager fileManager, IDocumentRepository documentRepository)

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using SimpleSignature.Application.Abstractions.Services;
 using SimpleSignature.Application.Settings;
 using Telegram.Bot;
 
@@ -17,7 +17,8 @@ public static class DependencyInjectionExtensions
         services.AddHttpClient("tgwebhook").RemoveAllLoggers()
             .AddTypedClient(httpClient => new TelegramBotClient(token, httpClient));
 
-        services.AddScoped<UpdateHandler>();
+        services.AddScoped<TelegramMessageHandler>();
+        services.AddScoped<INotificationSender>(sp => sp.GetRequiredService<TelegramMessageHandler>());
 
         return services;
     }
