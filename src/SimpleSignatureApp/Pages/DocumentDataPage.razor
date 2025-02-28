@@ -1,4 +1,4 @@
-@page "/document-data"
+@page "/document_data"
 @using MediatR
 @using SimpleSignature.Application.Abstractions.Dto
 @using SimpleSignature.Application.Queries
@@ -7,57 +7,88 @@
 
 <h3>Document Data</h3>
 
-<input type="number" @bind="documentId" placeholder="Enter Document ID" />
-<button @onclick="GetDocumentData">Get Document Data</button>
+<select value="@(_selectedUserId?.ToString())" @onchange="OnUserSelectionChanged">
+    <option value="">-- Select User --</option>
+    @foreach (var user in _users)
+    {
+        <option value="@user.Id">@user.Username</option>
+    }
+</select>
 
-@if (documents != null && documents.Any())
+@if (_documents.Any())
 {
     <table class="table">
         <thead>
-            <tr>
-                <th>ID</th>
-                <th>Filename</th>
-                <th>Created</th>
-                <th>Signed</th>
-                <th>Signing Status</th>
-            </tr>
+        <tr>
+            <th>ID</th>
+            <th>Filename</th>
+            <th>Created</th>
+            <th>Signed</th>
+            <th>Signing Status</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var document in documents)
-            {
-                <tr class="@GetRowClass(document.SigningStatus)">
-                    <td>@document.Id</td>
-                    <td>@document.Filename</td>
-                    <td>@document.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                    <td>@document.Signed.ToString("yyyy-MM-dd HH:mm:ss")</td>
-                    <td>@document.SigningStatus</td>
-                </tr>
-            }
+        @foreach (var document in _documents)
+        {
+            <tr class="@GetRowClass(document.SigningStatus)">
+                <td>@document.Id</td>
+                <td>@document.Filename</td>
+                <td>@document.Created.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@document.Signed.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@document.SigningStatus</td>
+            </tr>
+        }
         </tbody>
     </table>
 }
-else if (documents != null && !documents.Any())
+else if (!_documents.Any())
 {
     <p>No documents found.</p>
 }
 
 @code {
-    private int documentId;
-    private IEnumerable<DocumentData> documents;
+    private IReadOnlyCollection<UserDocumentData> _documents = new List<UserDocumentData>();
+    private IReadOnlyCollection<UserData> _users = new List<UserData>();
+    private int? _selectedUserId;
 
-    private async Task GetDocumentData()
+    protected override async Task OnInitializedAsync()
     {
-        // Здесь вызов метода для получения данных из БД
-        documents =  await Mediator.Send(new GetUserDocuments(documentId));
+        await LoadUsers();
     }
-    
-    private string GetRowClass(SigningStatus status)
+
+    private async Task LoadUsers()
+    {
+        _users = await Mediator.Send(new GetUsers());
+    }
+
+    private async Task OnUserSelectionChanged(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value?.ToString();
+        if (int.TryParse(selectedValue, out var userId))
+        {
+            _selectedUserId = userId;
+            await GetDocumentData(userId);
+        }
+        else
+        {
+            _selectedUserId = null;
+            _documents = new List<UserDocumentData>();
+        }
+    }
+
+    private async Task GetDocumentData(long userId)
+    {
+        _documents = await Mediator.Send(new GetUserDocuments(userId));
+    }
+
+    private static string GetRowClass(SigningStatus status)
     {
         return status switch
         {
             SigningStatus.Access => "status-access",
             SigningStatus.Deny => "status-deny",
-            _ => "status-none" // По умолчанию для None и других значений
+            _ => "status-none"
         };
     }
+
 }

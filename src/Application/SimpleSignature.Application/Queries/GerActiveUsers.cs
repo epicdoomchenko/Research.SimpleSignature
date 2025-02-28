@@ -20,6 +20,6 @@ internal class GerActiveUsersHandler : IRequestHandler<GerActiveUsers, IReadOnly
     public async Task<IReadOnlyCollection<UserData>> Handle(GerActiveUsers request, CancellationToken cancellationToken)
     {
         var users = await _repository.GetActivatedUsersAsync(cancellationToken);
-        return users.Select(c => new UserData { Id = c.Id, Userame = c.Username }).ToList().AsReadOnly();
+        return users.Select(c => new UserData { Id = c.Id, Username = c.Username }).ToList().AsReadOnly();
     }
 }

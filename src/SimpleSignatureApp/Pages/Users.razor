@@ -20,7 +20,7 @@
         {
             <tr class="@GetRowClass(user.IsActive)">
                 <td>@user.Id</td>
-                <td>@user.Userame</td>
+                <td>@user.Username</td>
             </tr>
         }
         </tbody>
@@ -36,7 +36,6 @@ else if (users != null && !users.Any())
 
     protected override async Task OnInitializedAsync()
     {
-        // Здесь вызов метода для получения данных из БД
         users =  await Mediator.Send(new GetUsers());
     }
     

@@ -1,0 +1,61 @@
+@page "/create_document"
+@using MediatR
+@inject IMediator Mediator
+
+<h3>Create Document</h3>
+
+
+<form @onsubmit="SubmitForm">
+    <div>
+        <label >Select File:</label>
+        <InputFile OnChange="HandleFileSelected" />
+    </div>
+
+    <button type="submit" disabled="@(!_fileContent.Any())">Create Document</button>
+</form>
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <p>@_message</p>
+}
+
+@code {
+    private byte[] _fileContent = [];
+    private string _fileName = "";
+
+    private string _message = "";
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        if (e.FileCount > 0)
+        {
+            var file = e.File;
+
+            _fileName = file.Name;
+
+            using var stream = file.OpenReadStream(maxAllowedSize: 10_485_760);
+            _fileContent = new byte[file.Size];
+            await stream.ReadAsync(_fileContent);
+
+            _message = $"File selected: {_fileName}";
+        }
+        else
+        {
+            _message = "No file selected.";
+        }
+    }
+
+    private async Task SubmitForm()
+    {
+        if (!string.IsNullOrEmpty(_fileName) && _fileContent.Any())
+        {
+            await Mediator.Send(new SimpleSignature.Application.Commands.CreateDocument(_fileName, new MemoryStream(_fileContent)));
+
+            _message = "Document creation request sent successfully!";
+        }
+        else
+        {
+            _message = "Please select a valid file.";
+        }
+    }
+}

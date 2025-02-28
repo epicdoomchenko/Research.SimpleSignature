@@ -14,4 +14,11 @@ internal class DocumentRepository : BaseRepository<Document>, IDocumentRepositor
     {
         return DbSet.SingleAsync(d => d.Id == documentId, cancellationToken);
     }
+
+    public async Task<IReadOnlyCollection<Document>> GetExcludingUserAsync(long userId, CancellationToken cancellationToken = default)
+    {
+        return (await DbSet
+            .Where(c => c.UserDocuments.All(u => u.UserId != userId))
+            .ToListAsync(cancellationToken)).AsReadOnly();
+    }
 }

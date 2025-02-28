@@ -18,7 +18,7 @@ internal class GetUsersHandler(IUserRepository userRepository)
         return users.Select(u => new UserLongData
         {
             Id = u.Id,
-            Userame = u.Username,
+            Username = u.Username,
             IsActive = u.ChatId != -1
         }).ToList().AsReadOnly();
     }

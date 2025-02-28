@@ -1,0 +1,96 @@
+@page "/send_doc"
+@using MediatR
+@using SimpleSignature.Application.Abstractions.Dto
+@using SimpleSignature.Application.Commands
+@using SimpleSignature.Application.Queries
+@inject IMediator Mediator
+
+<h3>Send Document To User</h3>
+
+<select value="@(_selectedUserId?.ToString())" @onchange="OnUserSelectionChanged">
+    <option value="">-- Select User --</option>
+    @foreach (var user in _users)
+    {
+        <option value="@user.Id">@user.Username</option>
+    }
+</select>
+
+<select value="@(_selectedDocumentId?.ToString())" @onchange="OnDocumentSelectionChanged"
+        disabled="@(!_selectedUserId.HasValue)">
+    <option value="">-- Select Document --</option>
+    @if (_documents != null)
+    {
+        @foreach (var document in _documents)
+        {
+            <option value="@document.Id">@document.FileName</option>
+        }
+    }
+</select>
+
+<button @onclick="SaveToDatabase" disabled="@(!_selectedUserId.HasValue || !_selectedDocumentId.HasValue)">Save to
+    Database
+</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <p>@message</p>
+}
+
+
+@code {
+    private IReadOnlyCollection<DocumentData> _documents = new List<DocumentData>();
+    private IReadOnlyCollection<UserData> _users = new List<UserData>();
+    private int? _selectedUserId;
+    private Guid? _selectedDocumentId;
+    private string? message;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = await Mediator.Send(new GetUsers());
+    }
+
+    private async Task OnUserSelectionChanged(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value?.ToString();
+        if (int.TryParse(selectedValue, out var userId))
+        {
+            _selectedUserId = userId;
+            _documents = await Mediator.Send(new GetDocuments(userId));
+        }
+        else
+        {
+            _selectedUserId = null;
+            _documents = new List<DocumentData>();
+            _selectedDocumentId = null;
+        }
+    }
+
+    private void OnDocumentSelectionChanged(ChangeEventArgs e)
+    {
+        var selectedValue = e.Value?.ToString();
+        if (Guid.TryParse(selectedValue, out var documentId))
+        {
+            _selectedDocumentId = documentId;
+        }
+        else
+        {
+            _selectedDocumentId = null;
+        }
+    }
+
+    private async Task SaveToDatabase()
+    {
+        if (_selectedUserId.HasValue && _selectedDocumentId.HasValue)
+        {
+            // Здесь должен быть вызов к вашему сервису или контексту БД
+            // Например: await databaseService.SaveDataAsync(selectedUserId.Value, selectedDocumentId.Value);
+            await Mediator.Send(new CreateSigningDocument(_selectedDocumentId.Value, _selectedUserId.Value));
+            message = $"Data sent successfully for User";
+        }
+        else
+        {
+            message = "Please select both a user and a document.";
+        }
+    }
+
+}

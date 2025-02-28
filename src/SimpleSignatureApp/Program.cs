@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SimpleSignature.Application.Commands;
 using SimpleSignature.Application.Extensions;
-using SimpleSignature.Application.Queries;
 using SimpleSignature.Application.Settings;
 using SimpleSignature.Infrastructure.DAL;
 using SimpleSignature.Infrastructure.DAL.Extensions;
@@ -22,9 +21,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(30); // Время жизни сессии
-    options.Cookie.HttpOnly = true; // Защита от доступа через JavaScript
-    options.Cookie.IsEssential = true; // Необходимо для работы сессий
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services.AddRazorPages(options =>
@@ -81,9 +80,8 @@ using (var scope = app.Services.CreateScope())
 
 app.MapGet("/api/auth/telegram", async (HttpContext context, IMediator mediator, CancellationToken cancellationToken) =>
 {
-    var query = context.Request.Query; // Извлекаем данные пользователя
+    var query = context.Request.Query;
     var data = query.ToDictionary(k => k.Key, k => k.Value.ToString());
-
 
     await mediator.Send(new CreateUser(long.Parse(data["id"]), data["username"]), cancellationToken);
     var telegramUser = new TelegramUser
@@ -96,45 +94,19 @@ app.MapGet("/api/auth/telegram", async (HttpContext context, IMediator mediator,
         AuthDate = data["auth_date"]
     };
 
-    // Сохраняем данные пользователя в сессии
     context.Session.SetString("TelegramUser", JsonSerializer.Serialize(telegramUser));
 
-    // Редирект на Blazor-страницу /user
     return Results.Redirect("/user");
 });
 
-app.MapPost("/api/document",
-        async ([FromForm] IFormFile file, IMediator mediator, CancellationToken cancellationToken) =>
-        {
-            var newDocId = await mediator.Send(new CreateDocument(file.FileName, file.OpenReadStream()),
-                cancellationToken);
-            return Results.Ok(new { Id = newDocId });
-        })
-    .WithOpenApi()
-    .DisableAntiforgery();
-
-app.MapGet("/api/user",
-    async ([FromServices] IMediator mediator, CancellationToken cancellationToken) =>
-    await mediator.Send(new GerActiveUsers(), cancellationToken));
-
-app.MapPost("/api/user/{id:long}/{documentId:guid}", async (
-        [FromRoute] long id,
-        [FromRoute] Guid documentId,
-        [FromServices] IMediator mediator,
-        CancellationToken cancellationToken) =>
-    {
-        await mediator.Send(new CreateSigningDocument(documentId, id), cancellationToken);
-    })
-    .WithOpenApi();
-
 app.MapGet("/bot/setWebhook",
-        async ([FromServices] TelegramBotClient bot, [FromServices] IOptions<TelegramOptions> telegramSettings) =>
-        {
-            var webhookUrl = telegramSettings.Value.WebhookUrl;
-            await bot.SetWebhook(webhookUrl.AbsoluteUri);
-            return $"Webhook set to {webhookUrl}";
-        })
-    .WithOpenApi();
+    async ([FromServices] TelegramBotClient bot, [FromServices] IOptions<TelegramOptions> telegramSettings) =>
+    {
+        var webhookUrl = telegramSettings.Value.WebhookUrl;
+        await bot.SetWebhook(webhookUrl.AbsoluteUri);
+        return $"Webhook set to {webhookUrl}";
+    });
+
 app.MapPost("/bot", async (
     [FromBody] Update update,
     [FromServices] TelegramMessageHandler telegramMessageHandler,
@@ -142,6 +114,7 @@ app.MapPost("/bot", async (
 {
     await telegramMessageHandler.HandleUpdateAsync(update, cancellationToken);
 });
+
 app.MapPost("/", async (
     [FromBody] Update update,
     [FromServices] TelegramMessageHandler telegramMessageHandler,

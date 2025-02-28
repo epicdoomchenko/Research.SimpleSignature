@@ -144,7 +144,7 @@ public class TelegramMessageHandler(
             await telegramBotClient.EditMessageReplyMarkup(
                 chatId: callbackQuery.Message!.Chat.Id,
                 messageId: callbackQuery.Message!.MessageId,
-                replyMarkup: null, // Передаем null, чтобы удалить клавиатуру
+                replyMarkup: null,
                 cancellationToken: cancellationToken
             );
         }

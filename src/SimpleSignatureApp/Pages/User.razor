@@ -29,7 +29,6 @@ else
 
     protected override void OnInitialized()
     {
-        // Получаем данные пользователя из сессии
         var session = HttpContextAccessor.HttpContext?.Session;
         var userJson = session?.GetString("TelegramUser");
 
@@ -39,12 +38,13 @@ else
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && telegramUser == null)
         {
-            // Если пользователь не аутентифицирован, перенаправляем его на страницу аутентификации
             Navigation.NavigateTo("/telegram-auth", forceLoad: true);
         }
+
+        return Task.CompletedTask;
     }
 }
