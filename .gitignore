@@ -484,3 +484,6 @@ $RECYCLE.BIN/
 *.swp
 
 *.db*
+
+appsettings.Development.json
+appsettings.*.local.json
