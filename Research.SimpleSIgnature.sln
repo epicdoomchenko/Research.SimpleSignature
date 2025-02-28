@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Infrastructure.FileStore", "SimpleSignature.Infrastructure.FileStore\SimpleSignature.Infrastructure.FileStore.csproj", "{87C5EE60-FC4A-41E9-871D-48BE8491F10C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleSignature.Infrastructure.FileStore", "src\Infrastructure\SimpleSignature.Infrastructure.FileStore\SimpleSignature.Infrastructure.FileStore.csproj", "{87C5EE60-FC4A-41E9-871D-48BE8491F10C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

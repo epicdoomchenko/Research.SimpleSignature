@@ -39,4 +39,9 @@ internal class UserRepository : BaseRepository<User>, IUserRepository
     {
         return DbSet.AnyAsync(u => u.Id == id, cancellationToken);
     }
+
+    public async Task<IReadOnlyCollection<User>> GetActivatedUsersAsync(CancellationToken cancellationToken = default)
+    {
+        return (await DbSet.Where(u => u.ChatId != -1).ToListAsync(cancellationToken)).AsReadOnly();
+    }
 }

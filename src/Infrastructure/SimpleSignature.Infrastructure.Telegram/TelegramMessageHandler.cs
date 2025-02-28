@@ -150,7 +150,7 @@ public class TelegramMessageHandler(
         }
         catch (Exception e)
         {
-            logger.LogWarning(e, "Error while editing message`");
+            logger.LogWarning(e, "Error while editing message");
         }
 
         await telegramBotClient.SendMessage(callbackQuery.Message!.Chat, "Result saved",

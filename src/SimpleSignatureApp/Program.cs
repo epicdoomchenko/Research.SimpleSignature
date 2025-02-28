@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SimpleSignature.Application.Commands;
 using SimpleSignature.Application.Extensions;
+using SimpleSignature.Application.Queries;
 using SimpleSignature.Application.Settings;
 using SimpleSignature.Infrastructure.DAL;
 using SimpleSignature.Infrastructure.DAL.Extensions;
@@ -111,6 +112,10 @@ app.MapPost("/api/document",
         })
     .WithOpenApi()
     .DisableAntiforgery();
+
+app.MapGet("/api/user",
+    async ([FromServices] IMediator mediator, CancellationToken cancellationToken) =>
+    await mediator.Send(new GerActiveUsers(), cancellationToken));
 
 app.MapPost("/api/user/{id:long}/{documentId:guid}", async (
         [FromRoute] long id,

@@ -1,0 +1,47 @@
+@page "/users"
+@using MediatR
+@using SimpleSignature.Application.Abstractions.Dto
+@using SimpleSignature.Application.Queries
+@inject IMediator Mediator
+
+<h3>Document Data</h3>
+
+@if (users != null && users.Any())
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in users)
+        {
+            <tr class="@GetRowClass(user.IsActive)">
+                <td>@user.Id</td>
+                <td>@user.Userame</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else if (users != null && !users.Any())
+{
+    <p>No users found.</p>
+}
+
+@code {
+    private IEnumerable<UserLongData> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Здесь вызов метода для получения данных из БД
+        users =  await Mediator.Send(new GetUsers());
+    }
+    
+    private string GetRowClass(bool isActive)
+    {
+        return isActive ? "status-access" : "status-deny";
+    }
+}
